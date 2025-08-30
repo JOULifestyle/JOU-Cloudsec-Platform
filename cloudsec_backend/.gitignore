@@ -1,0 +1,72 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+
+# VSCode settings
+.vscode/
+
+# macOS / Linux / Windows system files
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Log files
+*.log
+
+# Test and coverage reports
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.cache
+nosetests.xml
+coverage/
+*.egg
+.eggs/
+*.manifest
+*.tmp
+
+# MyPy
+.mypy_cache/
+
+# Pyre
+.pyre/
+
+# Pipenv
+Pipfile.lock
+
+# Poetry
+poetry.lock
+
+# Pyright
+pyrightconfig.json
+
+# Local env files
+.env
+.env.*
+
+# SQLite DBs
+*.sqlite3
+
+# AWS credentials and config (if used)
+.aws/

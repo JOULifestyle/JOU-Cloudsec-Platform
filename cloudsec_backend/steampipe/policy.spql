@@ -1,0 +1,8 @@
+SELECT
+  name,
+  public_access,
+  region
+FROM
+  aws_s3_bucket
+WHERE
+  public_access = 'true';

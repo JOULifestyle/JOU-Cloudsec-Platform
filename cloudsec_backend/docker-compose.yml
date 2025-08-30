@@ -1,0 +1,22 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - SUPABASE_DB=postgres
+      - SUPABASE_USER=postgres.xahxnpbplibmqquyzvek
+      - SUPABASE_PASS=Yifouwchte@1
+      - SUPABASE_HOST=aws-0-us-east-1.pooler.supabase.com
+      - SUPABASE_PORT=6543
+
+  steampipe:
+    image: turbot/steampipe
+    container_name: steampipe
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./steampipe:/workspace
+    working_dir: /workspace
+    command: [ "query", "aws", "--file", "/workspace/policy.spql" ]
