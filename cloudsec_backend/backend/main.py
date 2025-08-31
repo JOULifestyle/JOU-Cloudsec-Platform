@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from fastapi import FastAPI, Depends, Query, Body, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,9 +16,11 @@ import traceback
 import boto3
 from botocore.exceptions import ClientError
 from fastapi.security import OAuth2PasswordBearer
+from policy_evaluator import evaluate_policy
 import os
 from dotenv import load_dotenv
 import psycopg2
+from policies.aws_policies import check_s3_public_buckets
 
 from .aws_scanner import scan_all, scan_all_with_assumed_role, clear_default_aws_creds
 from cwpp.runtime_scanner import run_runtime_checks
@@ -52,6 +58,14 @@ class ContactForm(BaseModel):
     email: str
     subject: str
     message: str
+
+class PolicyViolation(BaseModel):
+    id: str
+    policy_name: str
+    resource: str
+    severity: str
+    description: str
+    detected_at: datetime
 
 # CORS
 app.add_middleware(
@@ -153,7 +167,22 @@ def scan_cspm(credentials: HTTPAuthorizationCredentials = Depends(auth_scheme)):
         # 🔑 Encode for JSON safety
         safe_results = jsonable_encoder(results)
 
-        # 🔑 Always save findings under data
+        # ✅ Evaluate against OPA policies
+        print("🔍 Starting policy evaluation for multi-tenant scan...")
+        s3_violations = evaluate_policy(safe_results, "cloudsec/s3/deny")
+        ec2_violations = evaluate_policy(safe_results, "cloudsec/ec2/deny")
+
+        print(f"📊 Multi-tenant S3 violations found: {len(s3_violations)}")
+        print(f"📊 Multi-tenant EC2 violations found: {len(ec2_violations)}")
+
+        safe_results["policy_violations"] = {
+            "s3": s3_violations,
+            "ec2": ec2_violations
+        }
+
+        print(f"💾 Multi-tenant policy violations added to results: {safe_results['policy_violations']}")
+
+        # 🔑 Save findings under data
         scan_id = save_scan_result(
             user_id=user_id,
             data=safe_results,
@@ -202,8 +231,25 @@ def scan_cspm_multi(credentials: HTTPAuthorizationCredentials = Depends(auth_sch
         results["scan_type"] = "cspm"
         results["timestamp"] = datetime.utcnow().isoformat()
 
-        # Save scan result
+        # 🔑 JSON-safe encoding
         safe_results = jsonable_encoder(results)
+
+        # ✅ Evaluate against OPA policies
+        print("🔍 Starting policy evaluation...")
+        s3_violations = evaluate_policy(safe_results, "cloudsec/s3/deny")
+        ec2_violations = evaluate_policy(safe_results, "cloudsec/ec2/deny")
+
+        print(f"📊 S3 violations found: {len(s3_violations)}")
+        print(f"📊 EC2 violations found: {len(ec2_violations)}")
+
+        safe_results["policy_violations"] = {
+            "s3": s3_violations,
+            "ec2": ec2_violations
+        }
+
+        print(f"💾 Policy violations added to results: {safe_results['policy_violations']}")
+
+        # Save scan result
         scan_id = save_scan_result(
             user_id=user_id,
             data=safe_results,
@@ -214,7 +260,10 @@ def scan_cspm_multi(credentials: HTTPAuthorizationCredentials = Depends(auth_sch
         return {"status": "ok", "results": safe_results}
 
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e), "traceback": traceback.format_exc()})
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e), "traceback": traceback.format_exc()}
+        )
 
 # -----------------------------
 # CWPP Scan
@@ -416,3 +465,63 @@ async def submit_contact(form: ContactForm):  # remove token if you don't enforc
         return {"status": "ok", "message": "Contact form saved"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/policy/violations")
+def get_policy_violations(credentials: HTTPAuthorizationCredentials = Depends(auth_scheme)):
+    user_info = verify_token(credentials)
+    user_id = user_info["id"]
+
+    try:
+        # Connect to DB
+        conn = psycopg2.connect(**DB_CONFIG)
+        cur = conn.cursor()
+
+        # Fetch the latest CSPM scan results
+        cur.execute("""
+            SELECT results
+            FROM scan_results
+            WHERE user_id = %s AND scan_type = 'cspm'
+            ORDER BY created_at DESC
+            LIMIT 1
+        """, (user_id,))
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+
+        if not row:
+            return []
+
+        scan_data = row[0]  # JSON from save_scan_result
+
+        violations = []
+        policy_data = scan_data.get("policy_violations", {})
+
+        print(f"📋 Raw policy data from scan: {policy_data}")
+
+        # Normalize into list
+        for service, service_violations in policy_data.items():
+            print(f"🔍 Processing {service} violations: {len(service_violations)} items")
+            for v in service_violations:
+                print(f"📝 Processing violation: {v}")
+                violations.append({
+                    "id": v.get("id") or f"{service}-{v.get('resource', 'unknown')}",
+                    "policy_name": v.get("policy") or f"{service} policy",
+                    "resource": v.get("resource", "unknown"),
+                    "severity": v.get("severity", "Medium"),
+                    "description": v.get("description", "Policy violation detected"),
+                    "detected_at": scan_data.get("timestamp"),
+                })
+
+        print(f"✅ Returning {len(violations)} normalized violations")
+        return violations
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e), "traceback": traceback.format_exc()}
+        )
+    
+@app.get("/scan/policies/s3")
+def s3_policy_scan():
+    results = check_s3_public_buckets()
+    return {"violations": results}

@@ -23,7 +23,7 @@ export default function Sidebar({
     { name: 'CWPP Scan', href: '/dashboard/cwpp', icon: '🛡️' },
     { name: 'Scan History', href: '/dashboard/history', icon: '📜' },
     { name: 'AWS Account', href: '/dashboard/aws-account', icon: '☁️' },
-    {name: 'Contact', href: '/contact', icon: '✉️' },
+    {name: 'Contact', href: '/dashboard/contact', icon: '✉️' },
     { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
   ];
 

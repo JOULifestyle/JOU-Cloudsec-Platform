@@ -121,7 +121,7 @@ const DashboardPage = () => {
         <section className="bg-indigo-600 text-white py-20 px-6 text-center lg:text-left rounded-lg">
           <h1 className="text-4xl font-bold mb-4">Welcome to JOU CloudSec</h1>
           <p className="text-lg max-w-2xl mx-auto lg:mx-0">
-            Monitor and secure your AWS environment with real-time CSPM and CWPP insights.
+            Stay ahead of threats — secure your AWS with real-time CSPM & CWPP intelligence.
           </p>
         </section>
 

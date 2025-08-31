@@ -102,3 +102,11 @@ export const getAWSAccount = async (token: string) => {
   });
   return handleResponse(response);
 };
+
+// ------------------ Policy Violations ------------------ //
+export const getPolicyViolations = async (token: string) => {
+  const response = await fetch(`${API_BASE_URL}/policy/violations`, {
+    headers: getAuthHeaders(token),
+  });
+  return handleResponse(response);
+};
