@@ -91,7 +91,7 @@ const DashboardPage = () => {
   try {
     const token = session.access_token;
 
-    const response = await fetch("http://localhost:8000/contact", {
+    const response = await fetch("https://jou-cloudsec-platform.onrender.com/contact", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -126,9 +126,9 @@ const DashboardPage = () => {
         </section>
 
         {/* Banner Image */}
-        <section className="w-full mt-6">
+        <section className="w-full mt-6 flex justify-center">
           <img
-            src="man-sitting-and-smilling.jpg"
+            src="/JOU-Cloudsec.jpg"
             alt="Cloud Security Banner"
             className="relative w-[700px] h-96 lg:h-[500px] rounded-lg overflow-hidden"
           />
