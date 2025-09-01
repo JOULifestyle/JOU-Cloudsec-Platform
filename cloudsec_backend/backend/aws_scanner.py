@@ -14,7 +14,7 @@ def assume_role(role_arn, session_name="CloudSecSession"):
     """
     Assume a role and return a boto3.Session locked to that role.
     """
-    sts = boto3.client("sts")
+    sts = boto3.client("sts", region_name=AWS_REGION)
     response = sts.assume_role(
         RoleArn=role_arn,
         RoleSessionName=session_name
@@ -26,7 +26,8 @@ def assume_role(role_arn, session_name="CloudSecSession"):
     return boto3.Session(
         aws_access_key_id=creds["AccessKeyId"],
         aws_secret_access_key=creds["SecretAccessKey"],
-        aws_session_token=creds["SessionToken"]
+        aws_session_token=creds["SessionToken"],
+        region_name=AWS_REGION,
     )
 
 
