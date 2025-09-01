@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir --default-timeout=100 -r requirements.txt
 # Copy the entire project structure
 COPY . .
 
-# ✅ Set default AWS region
+#  Set default AWS region
 ENV AWS_DEFAULT_REGION=us-east-1
 
 # Switch to backend directory

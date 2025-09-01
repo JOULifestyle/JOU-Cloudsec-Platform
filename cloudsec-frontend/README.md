@@ -53,6 +53,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 This frontend application connects to a backend API for cloud security scanning. Make sure the backend is running and accessible at the URL specified in `NEXT_PUBLIC_API_BASE_URL`.
 
+## Project Status
+Core features: FastAPI backend (CSPM/CWPP scans), Supabase auth, frontend, PostgreSQL integration.
+Bonus feature: OPA policy evaluation for compliance (e.g., S3 public access).
+
 ### Features
 
 - User authentication with Supabase

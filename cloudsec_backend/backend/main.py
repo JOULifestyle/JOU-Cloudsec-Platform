@@ -164,10 +164,10 @@ def scan_cspm(credentials: HTTPAuthorizationCredentials = Depends(auth_scheme)):
         results["scan_type"] = "cspm"
         results["timestamp"] = datetime.utcnow().isoformat()
 
-        # 🔑 Encode for JSON safety
+        #  Encode for JSON safety
         safe_results = jsonable_encoder(results)
 
-        # ✅ Evaluate against OPA policies
+        #  Evaluate against OPA policies
         print("🔍 Starting policy evaluation for multi-tenant scan...")
         s3_violations = evaluate_policy(safe_results, "cloudsec/s3/deny")
         ec2_violations = evaluate_policy(safe_results, "cloudsec/ec2/deny")
@@ -220,7 +220,7 @@ def scan_cspm_multi(credentials: HTTPAuthorizationCredentials = Depends(auth_sch
         raise HTTPException(status_code=400, detail="No role ARN found for this AWS account")
 
     try:
-        # 🚀 Clear default AWS creds to avoid scanning the wrong environment
+        #  Clear default AWS creds to avoid scanning the wrong environment
         clear_default_aws_creds()
 
         # Run scan with assumed role (always tenant role)
@@ -231,10 +231,10 @@ def scan_cspm_multi(credentials: HTTPAuthorizationCredentials = Depends(auth_sch
         results["scan_type"] = "cspm"
         results["timestamp"] = datetime.utcnow().isoformat()
 
-        # 🔑 JSON-safe encoding
+        #  JSON-safe encoding
         safe_results = jsonable_encoder(results)
 
-        # ✅ Evaluate against OPA policies
+        #  Evaluate against OPA policies
         print("🔍 Starting policy evaluation...")
         s3_violations = evaluate_policy(safe_results, "cloudsec/s3/deny")
         ec2_violations = evaluate_policy(safe_results, "cloudsec/ec2/deny")

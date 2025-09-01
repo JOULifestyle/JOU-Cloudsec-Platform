@@ -3,6 +3,10 @@
 ## Overview
 This is the backend for the CloudSec application, which provides cloud security scanning capabilities for AWS accounts. This implementation has been updated to support multi-tenancy, allowing each user to connect their own AWS account.
 
+## Project Status
+Core features: FastAPI backend (CSPM/CWPP scans), Supabase auth, frontend, PostgreSQL integration.
+Bonus feature: OPA policy evaluation for compliance (e.g., S3 public access).
+
 ## Features
 - CSPM (Cloud Security Posture Management) scanning
 - CWPP (Cloud Workload Protection Platform) scanning

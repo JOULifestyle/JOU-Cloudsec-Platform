@@ -12,8 +12,6 @@ ENV/
 env/
 .venv/
 .ENV/
-cloudsec_backend/docker-compose.yml
-docker-compose.yml
 cloudsec_backend/node_modules/
 node_modules/
 node_modules

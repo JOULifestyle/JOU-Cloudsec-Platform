@@ -244,7 +244,7 @@ def validate_aws_account(account_id: str, role_arn: str) -> bool:
             RoleArn=role_arn,
             RoleSessionName="validation-session"
         )
-        # Optional: check the returned account matches the provided account_id
+        # Check the returned account matches the provided account_id
         returned_account_id = assumed_role['AssumedRoleUser']['Arn'].split(":")[4]
         return returned_account_id == account_id
     except Exception:
