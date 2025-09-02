@@ -188,24 +188,24 @@ const DashboardPage = () => {
           )}
         </section>
 
-        {/* Customer Reviews */}
-        <section className="bg-gray-50 dark:bg-gray-800 p-6 mt-6 space-y-6 rounded-lg">
-          <h2 className="text-2xl font-bold text-center">Customer Reviews</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {reviews.map((review, idx) => (
-              <Card key={idx} className="shadow-lg rounded-2xl">
-                <CardContent className="p-4">
-                  <p className="text-gray-700 dark:text-gray-200">&quot;{review.feedback}&quot;</p>
-                  <p className="mt-2 font-semibold text-gray-900 dark:text-white">- {review.name}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+{/* Customer Reviews */}
+<section className="bg-gray-50 dark:bg-gray-800 p-6 mt-6 space-y-6 rounded-lg">
+  <h2 className="text-2xl font-bold text-center">Customer Reviews</h2>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {reviews.map((review, idx) => (
+      <Card key={idx} className="shadow-lg rounded-2xl">
+        <CardContent className="p-4">
+          <p className="text-gray-700 dark:text-gray-200">&quot;{review.feedback}&quot;</p>
+          <p className="mt-2 font-semibold text-gray-900 dark:text-white">- {review.name}</p>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+</section>
 
-        {/* Contact Form */}
-        <section className="p-6 mt-6 space-y-6">
-          <h2 className="text-2xl font-bold text-center">Contact Us</h2>
+{/* Contact Form */}
+<section className="p-6 mt-6 space-y-6">
+  <h2 className="text-2xl font-bold text-center">Contact Us</h2>
           <form
             onSubmit={handleContactSubmit}
             className="max-w-xl mx-auto space-y-4 bg-white dark:bg-gray-800 shadow rounded-lg p-6"

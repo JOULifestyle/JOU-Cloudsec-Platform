@@ -11,6 +11,7 @@ export default function Footer() {
              </Link>
              <Link href="/terms-of-service" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm transition-colors">
                Terms of Service
+{(() => { console.log('Footer Contact link rendered'); return null; })()}
              </Link>
              <Link href="/contact" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm transition-colors">
                Contact
