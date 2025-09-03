@@ -116,8 +116,8 @@ export default function AWSAccountPage() {
                 <p className="text-gray-700 dark:text-gray-300 mb-2">
                   Use this CloudFormation template to automatically create the IAM role:
                 </p>
-                <div className="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto border border-gray-300 dark:border-gray-600">
-                  <pre className="whitespace-pre-wrap break-words">
+                <div className="bg-gray-900 text-green-400 p-3 rounded text-xs border border-gray-300 dark:border-gray-600">
+                  <pre className="whitespace-pre-wrap break-all">
 {`AWSTemplateFormatVersion: '2010-09-09'
 Description: 'CloudFormation template for CloudSec'
 
@@ -156,8 +156,8 @@ Outputs:
                 <p className="text-gray-700 dark:text-gray-300 mb-2">
                   Or manually create the IAM role with this trust policy:
                 </p>
-                <div className="bg-gray-900 text-yellow-400 p-3 rounded text-xs overflow-x-auto border border-gray-300 dark:border-gray-600">
-                  <pre className="whitespace-pre-wrap break-words">
+                <div className="bg-gray-900 text-yellow-400 p-3 rounded text-xs border border-gray-300 dark:border-gray-600">
+                  <pre className="whitespace-pre-wrap break-all">
 {`{
   "Version": "2012-10-17",
   "Statement": [
