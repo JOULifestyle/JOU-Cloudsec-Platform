@@ -29,11 +29,11 @@ export default function LoginPage() {
     setError('');
 
     if (resetMode) {
-      // Handle password reset
-      try {
-        const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-          redirectTo: `${window.location.origin}/auth/login?mode=reset`,
-        });
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/auth/reset`,
+    });
+
 
         if (error) {
           setError(error.message);
